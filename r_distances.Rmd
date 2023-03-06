@@ -1,0 +1,39 @@
+---
+title: "distances"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+library("sp")
+library("raster")
+library("rgeos")
+library("sf")
+```
+
+the distances between a matrix of 2D points and a single 2D point
+```{r}
+?spDistsN1
+```
+
+the geographic distance between two (sets of) points
+```{r}
+?pointDistance
+```
+
+the distance between the given geometries
+```{r}
+?gDistance
+```
+
+the distance between pairs of geometries
+```{r}
+?st_distance
+```
+
+the distance from a set of points to all cells of a Raster
+```{r}
+?distanceFromPoints
+```
+

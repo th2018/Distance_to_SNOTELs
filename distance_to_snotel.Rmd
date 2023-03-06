@@ -1,0 +1,30 @@
+---
+title: "distance_to_SNOTELs"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+library("sp") 
+library("raster") 
+library("rgeos")
+library("sf")
+```
+
+```{r}
+snow<-read.csv("snow.csv")
+snow_sf<-st_as_sf(snow, coords = c("Longitude", "Latitude"))
+st_crs(snow_sf) <- 4326
+plot(snow_sf[6],main="SNOTEL (Elevation_ft)")
+```
+
+```{r}
+ext <- raster(extent(snow_sf), nrow = 190, ncol = 190)
+crs(ext) <- CRS('+init=EPSG:4326')
+```
+
+```{r}
+D <- distanceFromPoints(object = ext, xy = snow_sf) 
+plot(D)
+```
