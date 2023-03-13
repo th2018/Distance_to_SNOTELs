@@ -1,0 +1,63 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+https://cran.r-project.org/web/packages/lctools/vignettes/SpatialAutocorrelation.html
+
+```{r}
+# install.packages("lctools")
+library(lctools)
+library("sp") 
+library("raster") 
+library("rgeos")
+library("sf")
+```
+
+```{r}
+snow<-read.csv("snow.csv")
+snow_sf<-st_as_sf(snow, coords = c("Longitude", "Latitude"))
+st_crs(snow_sf) <- 4326
+plot(snow_sf[6],main="SNOTEL (Elevation_ft)")
+```
+
+```{r}
+Coords <- cbind( snow$Longitude,  snow$Latitude)
+bw <- 6 # Bandwidth: a positive integer that defines the number of nearest neighbours for the calculation of the weights
+mI <- moransI(Coords,bw, snow$Elevation_ft)
+moran.table <- matrix(data=NA,nrow=1,ncol=6)
+col.names <- c("Moran's I", "Expected I", "Z resampling", "P-value resampling",
+               "Z randomization", "P-value randomization")
+colnames(moran.table) <- col.names
+moran.table[1,1] <- mI$Morans.I
+moran.table[1,2] <- mI$Expected.I
+moran.table[1,3] <- mI$z.resampling
+moran.table[1,4] <- mI$p.value.resampling
+moran.table[1,5] <- mI$z.randomization
+moran.table[1,6] <- mI$p.value.randomization
+moran.table
+```
+
+
+```{r}
+data(GR.Municipalities)
+names(GR.Municipalities@data)
+class(GR.Municipalities)
+```
+
+```{r}
+Coords <- cbind(GR.Municipalities@data$X, GR.Municipalities@data$Y)
+bw <- 6 # Bandwidth: a positive integer that defines the number of nearest neighbours for the calculation of the weights
+mI <- moransI(Coords,bw,GR.Municipalities@data$Income01)
+moran.table <- matrix(data=NA,nrow=1,ncol=6)
+col.names <- c("Moran's I", "Expected I", "Z resampling", "P-value resampling",
+               "Z randomization", "P-value randomization")
+colnames(moran.table) <- col.names
+moran.table[1,1] <- mI$Morans.I
+moran.table[1,2] <- mI$Expected.I
+moran.table[1,3] <- mI$z.resampling
+moran.table[1,4] <- mI$p.value.resampling
+moran.table[1,5] <- mI$z.randomization
+moran.table[1,6] <- mI$p.value.randomization
+```
+
