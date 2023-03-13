@@ -12,6 +12,8 @@ library("sp")
 library("raster") 
 library("rgeos")
 library("sf")
+# install.packages("SpatialKDE")
+library("SpatialKDE")
 ```
 
 ```{r}
@@ -20,6 +22,15 @@ snow_sf<-st_as_sf(snow, coords = c("Longitude", "Latitude"))
 st_crs(snow_sf) <- 4326
 plot(snow_sf[6],main="SNOTEL (Elevation_ft)")
 ```
+
+```{r}
+grid <- create_grid_hexagonal( snow_sf, cell_size = 100000)
+points <- st_sample(snow_sf, 500) %>% st_as_sf()
+kde_estimate_grid <- kde(points, band_width = 150000, grid = grid)
+raster <- create_raster(snow_sf, cell_size = 100000)
+kde_estimate_raster <- kde(points, band_width = 150000, grid = raster)
+```
+
 
 ```{r}
 Coords <- cbind( snow$Longitude,  snow$Latitude)
